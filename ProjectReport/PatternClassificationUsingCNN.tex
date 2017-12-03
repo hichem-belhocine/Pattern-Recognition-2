@@ -1,0 +1,179 @@
+\documentclass[a4paper, 11pt, twoside, openright]{article}
+
+\usepackage[a4paper,includeheadfoot,margin=2.54cm]{geometry}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[none]{hyphenat}
+\usepackage{breakcites}
+\usepackage{microtype}
+\usepackage{longtable}
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{array}
+\usepackage[breaklinks=true, backref=page]{hyperref}
+
+
+\author{
+	Söllinger, Dominik\\
+	\texttt{Dominik.Soellinger@stud.sbg.ac.at}
+	\and
+	Belhocine, Hichem\\
+	\texttt{hichem.belhocine@stud.sbg.ac.at}
+	\and
+	Gonzalez Tejeda, Yansel\\
+	\texttt{yansel.gonzalez-tejeda@stud.sbg.ac.at}
+}
+\title{Pattern Classification Using Convolutional Neural Networks}
+
+%%%% these patches ensure that the backrefs point to the actual occurrences of the citations in the text, not just the page or section in which they appeared
+%%%% https://tex.stackexchange.com/questions/54541/precise-back-reference-target-with-hyperref-and-backref
+%%%% BEGIN BACKREF DIRECT PATCH, apply these AFTER loading hyperref package with appropriate backref option
+% The following options are provided for the patch, currently with a poor interface!
+% * If there are multiple cites on the same (page|section) (depending on backref mode),
+%   should we show only the first one or should we show them all?
+\newif\ifbackrefshowonlyfirst
+\backrefshowonlyfirstfalse
+%\backrefshowonlyfirsttrue
+%%%% end of options
+%
+% hyperref is essential for this patch to make any sense, so it is not unreasonable to request it be loaded before applying the patch
+\makeatletter
+% 1. insert a phantomsection before every cite, so hyperref has something to target
+%    * in case natbib is loaded. hyperref provides an appropriate hook so this should be safe, and we don't even need to check if natbib is loaded!
+\let\BR@direct@old@hyper@natlinkstart\hyper@natlinkstart
+\renewcommand*{\hyper@natlinkstart}{\phantomsection\BR@direct@old@hyper@natlinkstart}% note that the anchor will appear after any brackets at the start of the citation, but that's not really a big issue?
+%    * if natbib isn't used, backref lets \@citex to \BR@citex during \AtBeginDocument
+%      so just patch \BR@citex
+\let\BR@direct@oldBR@citex\BR@citex
+\renewcommand*{\BR@citex}{\phantomsection\BR@direct@oldBR@citex}%
+
+% 2. if using page numbers, show the page number but still hyperlink to the phantomsection instead of just the page!
+\long\def\hyper@page@BR@direct@ref#1#2#3{\hyperlink{#3}{#1}}
+
+% check which package option the user loaded (pages (hyperpageref) or sections (hyperref)?)
+\ifx\backrefxxx\hyper@page@backref
+% they wanted pages! make sure they get our re-definition
+\let\backrefxxx\hyper@page@BR@direct@ref
+\ifbackrefshowonlyfirst
+%\let\backrefxxxdupe\hyper@page@backref% test only the page number
+\newcommand*{\backrefxxxdupe}[3]{#1}% test only the page number
+\fi
+\else
+\ifbackrefshowonlyfirst
+\newcommand*{\backrefxxxdupe}[3]{#2}% test only the section name
+\fi
+\fi
+
+% 3. now make sure that even if there is no numbered section, the hyperref's still work instead of going to the start of the document!
+\RequirePackage{etoolbox}
+\patchcmd{\Hy@backout}{Doc-Start}{\@currentHref}{}{\errmessage{I can't seem to patch backref}}
+\makeatother
+%%%% END BACKREF PATCHES
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RE,LO]{\textit{\small{Pattern Classification Using Convolutional Neural Networks}}}
+\fancyfoot[LE,RO]{\thepage}
+\renewcommand{\footrulewidth}{0.1mm}
+
+\setlength{\parskip}{1em}
+\renewcommand{\baselinestretch}{1.5}
+
+
+\begin{document}
+	\begin{titlepage}
+		\centering
+		\vfill
+		\LARGE{PROJECT REPORT}\\
+		\vspace{1cm}
+		\LARGE{Pattern Classification Using Convolutional Neural Networks}\\
+		\vspace{1cm}
+		\normalsize{\textit{by}}\\
+		\vspace{1cm}
+		\normalsize{\textbf{Hichem Belhocine, Dominik Söllinger,  Yansel Gonzalez Tejeda}}\\
+		\normalsize{\texttt{\{hichem.belhocine, dominik.soellinger, yansel.gonzalez-tejeda\}@stud.sbg.ac.at}}\\
+		\vspace{1cm}
+		\normalsize{\textit{supervised by}}\\
+		\vspace{1cm}
+		\normalsize{\textbf{Ao. Univ.-Prof. Dipl.-Ing. Dr. Helmut A. Mayer}}\\
+		\vspace{1cm}
+		\normalsize{\textit{Project completed as part of the course}}\\
+		\vspace{1cm}
+		\normalsize{\textbf{Pattern Recognition II, Winter Term 2017/2018}}\\
+		\vspace{1cm}
+		\normalsize{\textbf{Department of Computer Science}}\\
+		\vspace{1cm}
+		\normalsize{\textbf{Paris-Lodron Universität Salzburg}}\\
+		\vfill
+		\today
+	\end{titlepage}
+	\clearpage % end title page
+	\begingroup
+	\pagestyle{empty}
+	\null
+	\newpage
+	\endgroup
+
+\begin{abstract}
+In this project we address the problem of classifying patterns in the context of artificial intelligence. Pattern classification is at the heart of many modern computational intelligent systems and despite much effort done, it remains being a challenging task. Therefore we propose to use Convolutional Neural Networks (CNN) to investigate the performance of Deep-Learning techniques on this area. In order to accomplish our objective we train and test our classifiers on three datasets: Semeion Handwritten Digits, Ionosfere and Wall-Following Robot Navigation. Our results show that blalblbll
+
+\noindent\textbf{Keywords:} pattern classification, convolutional neural networks.
+\end{abstract}
+
+%--------------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES PAGES
+%--------------------------------------------------------------------------------
+
+\newpage
+\tableofcontents % Prints the main table of contents
+
+\newpage
+\section{Introduction}
+Just an example of how we can use one file with all the bibliography references, e.g. \cite{Dibra.2016a} and these references navigate back to the page.
+
+\section{Convolutional Neural Networks}
+
+\section{Datasets}
+
+\subsection{Semeion Handwritten Digits}
+
+\subsection{Ionosphere}
+
+\subsection{Wall-Following Robot Navigation}
+
+\section{Implementation}
+
+\section{Experiment and Results}
+
+\section{Conclusion}
+
+\newpage
+\section*{Annex I. Project plan} \hypertarget{researchtimeline}
+\centering
+{\rowcolors{2}{green!50!yellow!30}{white}
+\begin{longtable}[c]{ c  p{9cm}  c  c}
+	\textbf{Date} & \textbf{Work step} & \textbf{Assigned to} & \textbf{Status}\\
+	\hline
+	\endfirsthead
+	
+
+	\textbf{Date} & \textbf{Work step} & \textbf{Assigned to} & \textbf{Status}\\
+	\hline\hline
+	\endhead
+	
+	\endfoot
+	\hline
+	\endlastfoot
+	
+	03.10.2017 & Defition of Project scope, topic, goals and members. & HB, DS, YG & Completed\\
+	
+	16.02.2018 & Submission of Project report to Prof. Mayer. & DS & TBD\\
+	
+\end{longtable}	
+\centering
+
+\bibliographystyle{apalike}
+
+\bibliography{PatternClassificationUsingCNNBib}
+
+\end{document}

@@ -2,6 +2,7 @@
 
 \usepackage[a4paper,includeheadfoot,margin=2.54cm]{geometry}
 \usepackage{graphicx}
+\graphicspath{ {images/} }
 \usepackage[utf8]{inputenc}
 \usepackage[none]{hyphenat}
 \usepackage{breakcites}
@@ -11,7 +12,10 @@
 \usepackage{fancyhdr}
 \usepackage{array}
 \usepackage[breaklinks=true, backref=page]{hyperref}
-
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{multirow}
 
 \author{
 	Söllinger, Dominik\\
@@ -78,6 +82,8 @@
 
 \setlength{\parskip}{1em}
 \renewcommand{\baselinestretch}{1.5}
+% Don#t show the word 'Contents' in the TOC
+\renewcommand*\contentsname{}
 
 
 \begin{document}
@@ -90,7 +96,13 @@
 		\vspace{1cm}
 		\normalsize{\textit{by}}\\
 		\vspace{1cm}
-		\normalsize{\textbf{Hichem Belhocine, Dominik Söllinger,  Yansel Gonzalez Tejeda}}\\
+		\begin{table}[h]
+			\centering
+			\begin{tabular}{c c c}
+				\textbf{Hichem Belhocine} & \textbf{Dominik Söllinger} & \textbf{Yansel Gonzalez Tejeda} \\
+				Matr.-Nr.: 1423381 & Matr.-Nr.: 1320218 & Matr.-Nr.: 01613132\\
+			\end{tabular}
+		\end{table}
 		\normalsize{\texttt{\{hichem.belhocine, dominik.soellinger, yansel.gonzalez-tejeda\}@stud.sbg.ac.at}}\\
 		\vspace{1cm}
 		\normalsize{\textit{supervised by}}\\
@@ -101,7 +113,7 @@
 		\vspace{1cm}
 		\normalsize{\textbf{Pattern Recognition II, Winter Term 2017/2018}}\\
 		\vspace{1cm}
-		\normalsize{\textbf{Department of Computer Science}}\\
+		\normalsize{\textbf{Department of Computer Sciences}}\\
 		\vspace{1cm}
 		\normalsize{\textbf{Paris-Lodron Universität Salzburg}}\\
 		\vfill
@@ -111,12 +123,11 @@
 	\begingroup
 	\pagestyle{empty}
 	\null
-	\newpage
 	\endgroup
 
 \begin{abstract}
-In this project we address the problem of classifying patterns in the context of artificial intelligence. Pattern classification is at the heart of many modern computational intelligent systems and despite much effort done, it remains being a challenging task. Therefore we propose to use Convolutional Neural Networks (CNN) to investigate the performance of Deep-Learning techniques on this area. In order to accomplish our objective we train and test our classifiers on three datasets: Semeion Handwritten Digits, Ionosfere and Wall-Following Robot Navigation. Our results show that blalblbll
-
+\noindent In this project we address the problem of classifying patterns by means of computational intelligence. Pattern classification is the foundation of many modern computational intelligence systems and despite much research in this field it still remains a challenging task. However, Convolutional Neural Networks (CNN) have been proven to excel at image recognition and image classification tasks. Hence, we want to investigate the performance of CNNs as a classifier in different domains. In addition to exploring pattern classification on 2D data, we address the performance of CNNs on 1D data. Therefore, we implement multiple CNN classifiers, and train and test their performance on three different datasets: Semeion Handwritten Digits, Ionosphere, and Wall-Following Robot Navigation. Our results show that CNNs are a useful tool to classify the patterns in these datasets.
+\\ \\
 \noindent\textbf{Keywords:} pattern classification, convolutional neural networks.
 \end{abstract}
 
@@ -128,49 +139,390 @@ In this project we address the problem of classifying patterns in the context of
 \tableofcontents % Prints the main table of contents
 
 \newpage
-\section{Introduction}
-Just an example of how we can use one file with all the bibliography references, e.g. \cite{Dibra.2016a} and these references navigate back to the page.
+\section{Introduction} \label{introref}
+In this project we address the problem of classifying patterns by means of computational intelligence. Pattern classification lies at the heart of many modern computational intelligence systems, for example, a linear logistic regression model is used by Gmail to classify emails into primary, social and promotion inboxes \cite{Aberdeen2010TheLB}; and handwritten checks can be converted to machine-readable text by taking a photograph, thus simplifying the deposit of money online. However, it still remains a challenging task. Therefore, our main goal is to train CNN classifiers and test their performance on datasets collected in different contexts.
+\\ \\
+We consider the machine learning nature of a CNN classifier and, since our project focuses on Deep Learning, we follow the paradigms and notation described in \cite{Goodfellow-et-al-2016}. Particularly, we build upon the following definition of learning:
+``A computer program is said to learn from experience $E$ with respect to some class of tasks $T$ and performance measure $P$, if its performance at tasks in $T$, as measured by $P$, improves with experience $E$.” \cite{Mitchell97a}
+\\ \\
+As already mentioned our goal is to train and evaluate CNNs. To achieve that we use the supervised learning approach. In this approach the classifier learns by ``seeing examples", similar to humans learning from experience. Data is then considered a collection of training samples. Each training sample consists of a series of attributes (a.k.a features) and the corresponding class (a.k.a. label). This type of learning is known as ``supervised learning" because the labels can be considered as being provided by an external supervisor.
+\\ \\
+Formally, we consider one training sample as a vector $\mathit{\mathbf{x}}\ \epsilon \  \mathbb{R}^n$. The elements $x_i$ in this vector represent the attributes. The aim is to generate a function (model) $f: \mathbb{R}^n \to \{1, \cdots, k\}$ assigning an input described by vector $\mathbf{x}$ to a class identified by a numeric code $y$ that satisfies the equation $y = f(\mathbf{x})$.
+\\ \\
+The training data is then fed into the CNN, which is a specific type of Artificial Neural Networks (ANN). The fundamental idea of a CNN is the use of the convolution mathematical operation to make the classifier invariant to different input transformations. The structure of this networks typically involves different kinds of layers. For instance, the convolutional layer performs the equally named operation while another type of layer (pooling) helps to improve the network's capability to generalize. Information finally flows through a layer connecting all its neuron to the previous layer that outputs the actual classification.
+\\ \\
+In our case, we made use of data from three different datasets: Semeion Handwritten Digits (SHD), Ionosphere (Ion) and Wall-Following Robot Navigation (WFRN). They were assembled to achieve different goals and have contrasting characteristics, for instance, SHD contains 2D data (images) while Ion and WFRN contain 1D data.
+\\ \\
+Next, we adapted an existing CNN with over 60 million parameters and 500,000 neurons for training with the datasets. This resulted in three different networks: SemeionNet, IonosphereNet and RobotNet. Validating the performs of each classifier let to a classification accuracy of 94\%, 93,3\% and 87,79\% on the test set.
+\\ \\
+Therefore, we organized this report as follows: In section \ref{cnnref} we focus on the specific form of our classifier, namely, Convolutional Neural Networks. Section \ref{dataref} describes the above-mentioned tasks $T$ and the experience $E$, i.e., datasets we use to train and test the classifier. Section \ref{implref} explains the actual implementation, section \ref{resultsref} presents the results and shows that CNN classifiers produce satisfactory results for all datasets. Finally, section \ref{conclusionref} concludes the work.
 
-\section{Convolutional Neural Networks}
+\section{Convolutional Neural Networks} \label{cnnref}
+We now turn to the description of the specific form of classifier we use, namely CNN, which can be regarded as a subcategory of ANN. Therefore, we first introduce the general structure, continue by reviewing the convolution operation from which CNNs got their name, and finally, describe how to combine these concepts.
 
-\section{Datasets}
+\subsection{Artificial Neural Networks} \label{sub:ann}
 
-\subsection{Semeion Handwritten Digits}
+An artificial neuronal network is a computational model inspired by the structure and physiology of biological neural networks.
+\\ \\
+Building blocks of an ANN are units or nodes called artificial neurons. The neurons are then connected to form the ANN. Furthermore, every connection has a weight. Each unit performs a simple computation: the output is calculated by a non-linear function applied to a weighted sum of its inputs. The weights play a crucial role because they provide the network with its ability to learn. The artificial neuron ( a.k.a perceptron ) receiving the signal can process it and send its output to other neurons connected to it.\\ \\
+Once we have the units, we can group and connect them in different ways to form a network. Moreover, we can distinguish between different unit groups and call them layers. The layer with direct connections to the input is called input layer and the one that outputs the class prediction is called output layer. Between these two layers we can have one or more so-called hidden layers. Dependent on whether the information in the network can only flow in one direction or not we call the network a feedforward neural network or recurrent neural network. Additionally, if all neurons in a layer are connected to all neurons in the subsequent layer, we call it a fully connected feedforward neural network.
+
+\subsection{Application in Image Processing}
+
+One of ANN's main fields of application is Image Processing. Although simple fully connected feedforward neural networks can be applied to images, it is usually not practical to employ this architecture for image data. \\ \\
+A very high number of neurons would be necessary to cope with high-resolution images. For instance, an image of 1000 x 1000 pixels would already require a network with one million neurons in the input layer. Conditioned on the problem, further layers of neurons can be added, which let the size of such networks grow rapidly. Therefore, training such networks becomes extremely time-consuming. \\ \\
+Inspired by the idea of filters used in Image Processing, researchers came up with the idea of integrating similar concepts into ANNs. In a mathematical sense convolution [\ref{sub:convolution}] operations are performed on the image. This has let to a neuronal network architecture called "Convolutional Neuronal Networks" [\ref{sub:cnn}].
+
+\subsection{Convolution} \label{sub:convolution}
+In this section we introduce the convolution mathematical operation and explain how it can be utilized to convolve 2D data (image matrix) with another matrix, usually called kernel matrix. In mathematics, convolution is defined as the integral of the product of the two functions after one is reversed and shifted:
+\begin{equation}
+(f * g)(x) = \int_{-\infty}^{\infty} f(t) \cdot g(x-t) dt
+\label{eq:convolution1}
+\end{equation}
+Since an image can be seen as a function, we consider $f$ as our image and $g$ as a so-called filter or kernel. $f * g$ is therefore called the convolution of our image with a kernel. \\ \\
+However, in the real world, we usually have to deal with discrete signals, for example, images.
+Therefore, for simplicity, we rewrite equation \ref{eq:convolution1} in a way that it works for discrete 2D images.
+\begin{equation}
+(f * g)(x,y) = \sum_{n=-\infty}^{\infty} \sum_{m=-\infty}^{\infty} f(x,y) \cdot g(x-n,y-m)
+\label{eq:convolution2}
+\end{equation}
+If we apply equation \ref{eq:convolution2} to an arbitrary image matrix, we will notice that convolution is similar to taking a weighted sum of pixel values in a certain image region. Additionally, the image and the kernel can have different sizes. As we will see in the CNN implementation (section number \ref{implref}), 2D kernels are usually defined to be square matrices of size $k$.
+\begin{figure}[h!]
+	\centering
+  \includegraphics[width=300px]{convolution.JPG}
+	\caption[]{Convolution of input image matrix with kernel matrix. Reproduced from the internet.\footnotemark}
+	\label{convolution}
+\end{figure} \\ \\
+Figure \ref{convolution} shows an example: An arbitrary input image gets convolved with a 3x3 kernel ($k=3$). To calculate the values of the pixel (2,2) in the convolved image matrix, the kernel gets centered at the same pixel position on the image matrix. Then each element of the kernel gets multiplied with the overlapping elements of the image matrix. Finally, the sum of the products forms the resulting value for pixel (2,2) in the convolved image matrix.\\ \\
+\footnotetext{\url{http://machinelearninguru.com/computer_vision/basics/convolution/image_convolution_1.html}}
+
+\subsection{Convolutional Neural Networks} \label{sub:cnn}
+In this section we analyze how convolution can be integrated into ANNs and discuss their main building blocks. Recall from section \ref{sub:ann} that ANNs comprise layers with different purposes. CNNs add more structure on top of the standard input, output and hidden layers. They usually start with one or more convolutional layers (subsection \ref{subsub:clayer}) which are often followed by a pooling layer (subsection \ref{subsub:player}). The final layer is, in most cases, a fully connected layer.
+\\ \\
+CNNs require relatively little pre-processing compared to traditional image classification algorithms. While in traditional approaches all filter parameters had to be hand-engineered, the network can now learn them on its own. This independence from prior knowledge and human effort in feature design is a major advantage.
+
+\subsubsection{Convolution Layer} \label{subsub:clayer}
+As the name implies, the convolutional layer is the core building block of a CNN since it performs the actual convolution operation. The input to a convolutional layer is typically a $w$ x $h$ x $ic$ image where $w$ is the width, $h$ is the height and $ic$ is the number of input channels, for example, 3 for RGB images. The layer comprises a set of learnable square kernels with a fixed size $k$ (see section \ref{sub:convolution} for details). \\ \\
+To control how the filter moves around the image, we introduce two other parameters called stride $s$ and padding $p$. A stride of $i$ simply means that the kernel moves $i$ steps to the left/down after computing the convolution for a pixel region. Padding is used to define the behavior in the border regions. For instance, let us assume we want to apply convolution on the top/left pixel value of an image. Since the pixel is sitting in a corner, we are missing pixels on its left/top. Padding allows us to virtually attach a border region around the image to deal with border pixels.\\ \\
+Another important aspect to discuss is the number of output channels $c$ (not to be confused with input channel $ic$) in the convolutional layer. It is rather not obvious how to interpret cases like the first convolutional layer in Figure \ref{semeion_architecture} depicting our SemeionNet. As we describe in the dataset section \ref{sub:semeion}, the input images are binary, hence it only has one input channel. However, we can see that after the first layer the number of channels has increased to 64. This is by no means a problem, if we think of convolution as generating another version of the original image. We just need to set our convolutional layer's output channels to 64 ($c=64$).
+The network will then learn the weights of the same number of kernels, i.e., 64. Additionally, all kernels in one convolutional layer will have the same size $k$. \\ \\
+By adjusting the number of output channels $c$ as well as the kernel size $k$, stride $s$ and padding $p$ we can shape the output of the convolutional layer. Note that we can interpret the filters as feature detectors, therefore we call the result feature map. We emphasize that training does not adjust any of the mentioned parameters. Only the values of the kernel matrix get adjusted. For example, we employ 64 filters of size 11 x 11, stride of 4 and padding of 2 pixels to implement the first convolutional layer of our SemeionNet (see Figure \ref{semeion_architecture}).
+\subsubsection{Rectified Linear Unit function} \label{subsub:relulayer}
+We already saw how to define the filters or kernels in the convolutional layer to generate the feature maps. Typically, what follows next, is a non-linear activation function. The output of the convolutionl layer gets passed through this function. In the brain-analogy interpretation this is an activation function; from a mathematical point of view, a non-linearity is needed to enlarge the type of functions the CNN can learn. If we had only convolutions and linear activation functions, the entire classifier would also be linear.
+There are different activation functions that can be used, e.g., sigmoid or tanh. Nevertheless, the Rectified Linear Unit (\textbf{ReLu}) activation function is the \textit{de facto} standard. It is defined as the positive part of its argument:
+\begin{equation}
+f(x) = x^+ = max(0, x).
+\end{equation}
+Advantages include an efficient computation as well as a better gradient propagation since it's not prone to the vanishing gradient problem. While activation functions like sigmoid or tanh start to flatten out once the input signal gets increases, the ReLU preserves its stable gradient independent of the input signal's strength. One the other hand, the ReLu is not differentiable at zero. However, it is differentiable anywhere else, and a value of 0 or 1 can be chosen arbitrarily to fill the point where the input is 0.
+\subsubsection{Pooling Layer} \label{subsub:player}
+Pooling Layers are used to reduce the spatial size of an image. Employing a so-called Max-Pooling operation (Figure \ref{max_pooling}) simply reduces the spatial size by removing all non-max values within a certain region.
+Pooling is a common way to prevent overfitting since it reduces the number of parameters required by the subsequent layers. \\
+\begin{figure}[h!]
+	\centering
+  \includegraphics[width=250px]{max_pooling.png}
+	\caption{Max Pooling operation. In the region of 2x2 pixels, the maximum value is selected. Reproduced from \url{www.quora.com/What-is-max-pooling-in-convolutional-neural-networks}}
+	\label{max_pooling}
+\end{figure}
+\subsubsection{Fully Connected Layer} \label{subsub:fclayer}
+A fully connected layer takes all neurons in the previous layer and connects it to every single neuron it has. In CNNs fully connected layers are typically used to end the network by classifying the feature maps generated by the previous layers. Therefore, this layer basically takes an input volume, e.g., the output of the convolution layer or pooling layer and outputs an N-dimensional vector where N is the number of classes that the program has to choose from.\\ \\
+For example, since we want a digit classification algorithm \ref{semeion_architecture}, N is chosen to be 10. We interpret the elements of this vector as weights representing the class scores, i.e., the more probable the class is, the higher the score of this class will be. These scores can then be normalized and interpreted as probabilities. Moreover, they are used to calculate the loss and train the network.
+
+\section{Datasets} \label{dataref}
+In order to carry out the project, we obtained three datasets \cite{Lichman:2013}: Semeion Handwritten Digits (SHD), Ionosphere (Ion) and Wall-Following Robot Navigation (WFRN).
+\\ \\
+In the case of SHD, people were asked to write down the numbers from 0 to 9. The numbers were then digitalized resulting in a collection of digital images. Each image consists of 16 x 16 pixels representing a binary value. Since every image shows a number between 0 and 9 and is described by 256 (16 x 16) attributes, our classifier needs to be able to map a 256 dimensional vector to a class.
+\\ \\
+In contrast to SHD, the classification task on Ion is binary and the attribute domain is continuous. Here radar readings were collected and the classifier is expected to "say" if the radar return is "good" or "bad". This classification task is relevant in ionospheric research where a good signal means that it is suitable for further analysis whereas a bad signal not. In general, good returns are indicated by well-defined signals, which are evidence of the presence of some type of structure in the ionosphere. Therefore, recognizing these well-defined signals would normally require human intervention \cite{sigillito1989classification}.
+\\ \\
+The WFRN dataset represents a third scenario different from the two above. In the original experiment 24 sensors were placed in the 'waist' of a SCITOS G5 robot. The robot had to navigate in a room keeping a desired stand-off distance from a wall in an indoor environment, effectively reducing a two-dimensional navigation problem to a one-dimensional problem by adding a motion constraint. The classifier is expected to discriminate between four classes. They represent movements the robot is recommended to undertake in order to preserve the stand-off distance. The dataset is slightly more complicated than the other two, thus we describe it in detail in subsection \ref{sub:wfrn}.
+\\ \\
+For all the above three cases, we will state the classification task formally. This contributes to clarity and understanding of the classifiers.
+
+\subsection{Semeion Handwritten Digits} \label{sub:semeion}
+The data are structured in a 1593 x 266 matrix where each row represents a binary encoded digit. The first 256 values of each row represent the 16 x 16 pixels of the original digit image while the last 10 values represent the class index (1-of-n code) the digit belongs to. The task is formally:
+\begin{equation}
+Classifier \colon \{0, 1\}^{16 \times 16} \to \{0, 1\}^{10}
+\end{equation}
+
+\subsection{Ionosphere} \label{sub:ion}
+
+This radar data was collected by a system consisting of a phased array of 16 high-frequency antennas.  Next, we will outline the preprocessing step, capturing the essential features needed to understand the input to the CNN; for a detailed explanation, the reader is referred to the original paper \cite{sigillito1989classification}. The received signal from the pulse at time $t$ is modeled as a complex number with real part $A$ and imaginary part $B$.
+\begin{equation}
+	C(t) = A(t) + iB(t).
+\end{equation}
+Given that the pulse is repeated every $T$ time units and $k$ being the pulse number, the signal can then be correlated with a delayed copy of itself (autocorrelation):
+\begin{equation}\label{eq:acf:r}
+	R(t, k) = \sum_{i=0}^{16} C(t + iT)C^*[t + (i + k)T].
+\end{equation}
+The sum here is discrete and range from $0$ to $16$ because $k = 16$ in the radar system where the data was collected, and $C^*$ denotes complex conjugation. Since the set of complex numbers is a field, the function $R$ is also complex. If we denote its real and imaginary parts, respectively, as $A_R$ and $B_R$ we have
+\begin{equation}\label{eq:acf:c}
+R = \sum_{j=0}^{16} A_{R_j} + \sum_{j=0}^{16} iA_{R_j}
+\end{equation}
+The 17 x 2 tuples $(A_{R_j}, A_{R_j})$ representing the complex discrete function $R$ are the input to the CNN. There are 351 instances in the dataset. The task is formally:
+\begin{equation}
+Classifier \colon \mathbb{R}^{34} \to \{"good", "bad"\}
+\end{equation}
+
+\subsection{Wall-Following Robot Navigation} \label{sub:wfrn}
+
+This dataset comprises three different datasets.
+The first one contains the raw values of the measurements of all 24 ultrasound sensors and the corresponding class label. Sensor readings are sampled at a rate of 9 samples per second.
+The second one contains four sensor readings named 'simplified distances' and the corresponding class label. These simplified distances are referred to as the 'front distance', 'left distance', 'right distance' and 'back distance'. They consist of the minimum sensor readings among those within 60 degree arcs located at the front, left, right and back parts of the robot.
+The third one contains only the front and left simplified distances and the corresponding class label.
+The wall-following task and data gathering was designed to test the hypothesis that this apparently simple navigation task is indeed a non-linearly separable classification task. Thus, linear classifiers, such as the Perceptron Network are not able to learn the task. Nonlinear neural classifiers, such as the Multi-Layer-Perceptron network are able to learn the task and command the robot successfully without collisions. The task is formally:
+\begin{equation}
+Classifier \colon \mathbb{R}^{24} \to
+\begin{Bmatrix}
+\text{"Move-Forward",}\\
+\text{"Slight-Right-Turn",}\\
+\text{"Sharp-Right-Turn",}\\
+\text{"Slight-Left-Turn",}\\
+\end{Bmatrix}
+\end{equation}
+
+\section{Implementation} \label{implref}
+
+Due to the different characteristics (number of input features, number of samples) of the datasets we adapted our network architectures (referred frequently as a model) in a way that it can solve the problem addressed by the particular datasets (see section \ref{dataref}). We describe the arquitectures here making havy use of the notation introduced in section \ref{sub:cnn}. The models were implemented in Pytorch\footnote{http://pytorch.org} which is an open source machine learning framework written in Python. Since we did not reuse existing models, we did not use pre-trained weights.
+
+\subsection{Semeion}
+
+The Semeion dataset consists of real images, therefore, we reviewed existing CNN models. AlexNet \cite{Krizhevsky:2012:ICD:2999134.2999257}, the winner of the ImageNet challenge in 2012, is a network easy to implement and suits remarkably image classification tasks. Based on the AlexNet, which has over \textbf{60 million parameters} and \textbf{500,000 neurons} we developed our model which we have called SemeionNet.
+\\ \\
+Figure \ref{semeion_architecture} shows that SemeionNet takes a one channel 250 x 250 grayscale image as input and classifies it into ten categories. Due to the fact that the Semeion dataset consists of 16 x 16 images, we first need to upscale the images to the required (250 x 250) dimensionality. We believe that upscaling seems to have a positive effect on the classification accuracy because we are able to apply more layers of convolution when using higher resolution images.
+\\ \\
+For training our network we use the ADAM \cite{DBLP:journals/corr/KingmaB14} optimizer with a batch size of 10 and an initial learning rate of 0.00001. These numbers were chosen experimentally. \\ The term "batch size" refers to the number of samples from which we compute the gradients before updating the weights. Hence, large batch sizes decrease the overall training time of a network significantly. However, it also has been observed in practice that when using a larger batch there is a significant degradation in the quality of the model, as measured by its ability to generalize \cite{DBLP:journals/corr/KeskarMNST16}. \\
+ADAM is a gradient descent based optimizer. Its main advantage is its adaptive learning rate which means that we are not required to adapt the learning rate manually during the training process. The algorithm adjusts the learning rate by calculating a running average of the gradients and the second moments of the gradients. \\ \\
+Error assessment was performed based on the cross entropy loss as it is common for classification problems. No additional input normalization was required since our data are already in the range between 0-1.
+
+\begin{figure}[h!]
+	\centering
+  \includegraphics[width=400px]{semeion_architecture.png}
+	\caption{Network Architecture: SemeionNet.}
+	\label{semeion_architecture}
+\end{figure}
+
 
 \subsection{Ionosphere}
 
+Due to the fact that Ionosphere's samples consist of a 1D vector with 34 features, it was not obvious how to train a network with a model designed for 2D image data. Therefore, we implemented our own model called IonosphereNet (\ref{ionosphere_architecture}) that applies multiple 1D convolutions to solve this challenging binary (good or bad) classification problem.
+\\ \\
+No additional input normalization was performed since the input data are ranged between -1 and 1. For training we again used the ADAM optimizer with a batch size of 20 and a learning rate of 0.00001. Error assessment was done based on the cross entropy loss.
+
+\begin{figure}[h!]
+	\centering
+  \includegraphics[width=400px]{ionosphere_architecture.png}
+	\caption{Network Architecture: IonosphereNet.}
+	\label{ionosphere_architecture}
+\end{figure}
+
 \subsection{Wall-Following Robot Navigation}
 
-\section{Implementation}
+The dataset consists of 24 input features and we need to map them to four values representing four different directions.
+We again implemented our own model to classify the data.
+\\ \\
+For training RobotNet \ref{robot_architecture} we used a batch size of 20 and the ADAM \cite{DBLP:journals/corr/KingmaB14} optimizer with a learning rate of 0.00001. Error assessment was done based on the cross entropy loss.
 
-\section{Experiment and Results}
+\begin{figure}[h!]
+	\centering
+  \includegraphics[width=400px]{robot_architecture.png}
+	\caption{Network Architecture: RobotNet.}
+	\label{robot_architecture}
+\end{figure}
 
-\section{Conclusion}
+\section{Experiment and Results} \label{resultsref}
+
+\subsection{Partition of the data in training and test set}
+ \label{partitioning_train_test}
+Splitting the data into train and test data is a crucial step when it comes to ensure reliable results. Even if train and test data get separated strictly, it still cannot be guaranteed that the accuracy gets boosted by picking data luckily.
+\\ \\
+One way to alleviate this problem is the so-called k-fold cross validation. To apply that strategy we partition the dataset into k chunks. We alternately pick one chunk and use it for testing while the others are used as training data. Once we have iterated across the k chunks, we average the accuracy on every single test set. This provides us with the overall accuracy.
+\\ \\
+We consider that the datasets are small, thus we choose heuristically $k=5$ to train/test our model on a GPU (Graphical Processing Unit). Results presented in next subsections are based on the 5-fold cross validation.
+\subsection{Training curve}
+
+We train the network by measuring its performance on the training data. The so-called loss function computes the error based on the network output and a given input.
+\\ \\
+The choice of the best loss function is highly dependent on the problem being solved. A typical loss function for classification problems is the cross entropy loss.
+\\ \\
+Since all datasets map one input to a single output class, we use Pytorch's cross entropy criterion as presented in equation \ref{eq:crossentropy} to compute the loss. The cross entropy criterion internally combines the softmax classifier with a cross entropy loss. Recall that for every example in a $N$-classes classification problem we have label $y$, and we interpret the output of the fully connected layer \ref{subsub:fclayer} as class scores $w_i, \, i \in \{1, 2, \cdots , N\}$. We then can calculate the loss of misclassifying a single pattern with class $y$ and corresponding score $w_i$:
+
+\begin{equation}
+	\begin{gathered}
+		loss(y,\omega_{i}) = -log(\frac{e^{\omega_{i}}}{\sum_{j=1}^{N}{e^{\omega_{j}}}}) = -\omega_{i} + log(\sum_{j=1}^{N}{e^{\omega_{j}}}).
+	\end{gathered}
+	\label{eq:crossentropy}
+\end{equation}
+\\
+Plotting the loss for every epoch is a good way to gain insight into training and network performance. We initialized all weights randomly before we start training. In general, the network should be trained until the loss function converges. Non-convergence of the loss function is an indicator for bad network architecture (model) or training parameters (e.g. learning rate). Nevertheless, there is often a trade-off between a small loss and generalization. Having a small loss on training set does not necessarily imply a good performance on validation data. \\ \\
+The figures \ref{fig:semeion_loss}, \ref{fig:ionosphere_loss} and \ref{fig:robot_loss} show the loss within a 20 epoch timeframe. Different lines represent different iterations.
+
+\begin{figure}[h!]
+	\center{\textbf{Training error per epoch and dataset}} \\
+	\vspace{0.2cm}
+	\begin{minipage}[b]{0.3\textwidth}
+	  \includegraphics[width=\textwidth]{semeion_loss.png}
+		\vspace*{-8mm} % Decrease the space between figure and caption
+		\captionsetup{font=footnotesize}
+	  \caption{Semeion.}
+	  \label{fig:semeion_loss}
+	\end{minipage}
+	\begin{minipage}[b]{0.3\textwidth}
+	  \includegraphics[width=\textwidth]{ionosphere_loss.png}
+		\vspace*{-8mm}
+		\captionsetup{font=footnotesize}
+	  \caption{Ionosphere.}
+	  \label{fig:ionosphere_loss}
+	\end{minipage}
+	\begin{minipage}[b]{0.3\textwidth}
+		% \vspace{8mm} % Add some space between first and second row
+	  \includegraphics[width=\textwidth]{robot_loss.png}
+		\vspace*{-8mm}
+		\captionsetup{font=footnotesize}
+	  \caption{Wall Following Robot.}
+	  \label{fig:robot_loss}
+	\end{minipage}
+\end{figure}
+
+
+\subsection{Training time}
+
+In this experiment we measure the training time for one epoch in different settings. This is the time required to compute the network's output for all samples in the training set and adjusting the weight accordingly.
+\\ \\
+We started by assessing the performance of the network on a central processing unit (CPU). While training time is still acceptable in case of small networks, the training of large networks like AlexNet is painfully slow. Therefore, we decided to experiment with GPU powered training. As it can be seen in table \ref{training_times} the training on an NVIDIA Tesla K80 GPU\footnote{http://www.nvidia.com/object/tesla-k80.html} is about 14 times faster than on the CPU when training RobotNet. This shows that GPU based training is a remarkable option for training large-scale networks.
+\vspace*{5mm}
+\begin{table}[h!] \label{table:training_time}
+	\centering
+	\begin{tabular}{ | l | c | c | }
+		\hline
+	  \textbf{Dataset} & \textbf{Training Time (CPU)} & \textbf{Training Time (GPU)} \\
+		\hline
+	  Semeion & 180 sec & 50 sec \\
+		\hline
+	  Ionosphere & 6.56 sec & 0.5 sec \\
+		\hline
+		Wall Following Robot & 165 sec & 11.5 sec \\
+		\hline
+	\end{tabular}
+	\caption{Comparison: Training time for each network on CPU and GPU.}
+	\label{training_times}
+\end{table}
+
+\subsection{Performance on test sets}
+Finally, we validate the performance of the networks by using 5-fold cross validation (see \ref{partitioning_train_test}).
+The following table shows the average accuracy of every CNN classifier on the test data.
+\vspace*{5mm}
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ | l | c | c | }
+		\hline
+	  \textbf{Dataset} & \textbf{Accuracy} \\
+		\hline
+	  Semeion & 94.59\% \\
+		\hline
+	  Ionosphere & 93.3\% \\
+		\hline
+		Wall Following Robot & 87.79\% \\
+		\hline
+	\end{tabular}
+\end{table}
+\\
+As we can see, CNN based classification seems to be reasonable for classifying all datasets. It is not surprising that the method works well for the Semeion dataset as it comprises image data and image classification is exactly the area where CNNs excel.\\ \\
+Nevertheless, the results for the Ionosphere and Wall-Following-Robot dataset show that applying CNNs for non-2D problems is also legitimate. Especially, the results for the Ionosphere dataset demonstrate the potential of applying CNNs on non-2D data. The next step would now be to compare the results to other methods.
+
+\subsection{Confusion matrix}
+In order to gather more insights into the performance on the test data, it is useful to construct a confusion matrix. Each row of the matrix represents the instances of a predicted class while each column represents the instances of an actual class.
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{| c | l | c | c | c | c | c | c | c | c | c | c | }
+		 \hline
+		  & \multicolumn{11}{c|}{\textbf{Accuracy (Predicted class) (\%)}} \\
+		 \hline
+		 \multirow{11}{*}{\rotatebox[origin=c]{90}{\textbf{Accuracy (Actual class) (\%)}}}
+		 &  & \textit{0} & \textit{1} & \textit{2} & \textit{3} & \textit{4} & \textit{5} & \textit{6} & \textit{7} & \textit{8} & \textit{9} \\
+		 \cline{2-12}
+		 & \textit{0} & 98.76 & 0 & 0 & 0 & 1.24 & 0 & 0 & 0 & 0 & 0 \\
+		 \cline{2-12}
+		 & \textit{1} & 0 & 95.68 & 1.23 & 0 & 1.23 & 0 & 0 & 1.23 & 0.62 & 0 \\
+		 \cline{2-12}
+		 & \textit{2} & 0.63 & 0 & 96.86 & 0 & 0 & 0 & 0 & 0.63 & 0.63 & 1.26 \\
+		 \cline{2-12}
+		 & \textit{3} & 0 & 0.63 & 0.63 & 93.71 & 0 & 1.89 & 0 & 0.63 & 1.26 & 1.26 \\
+		 \cline{2-12}
+		 & \textit{4} & 0.62 & 2.48 & 0 & 0 & 91.93 & 0.62 & 1.24 & 1.24 & 0 & 1.86 \\
+		 \cline{2-12}
+		 & \textit{5} & 0.63 & 0.63 & 0 & 1.89 & 1.26 & 94.34 & 1.26 & 0 & 0 & 0 \\
+		 \cline{2-12}
+		 & \textit{6} & 0.62 & 0 & 0 & 0 & 1.86 & 0 & 95.65 & 0 & 1.86 & 0 \\
+		 \cline{2-12}
+		 & \textit{7} & 0 & 1.90 & 0.63 & 0 & 0.63 & 0 & 0.63 & 94.30 & 0.63 & 1.27 \\
+		 \cline{2-12}
+		 & \textit{8} & 1.29 & 0.65 & 0.65 & 0 & 0.65 & 0.65 & 0 & 0 & 93.55 & 2.58 \\
+		 \cline{2-12}
+		 & \textit{9} & 0.63 & 1.90 & 1.27 & 0.63 & 3.16 & 0.63 & 0 & 0 & 0.63 & 91.14 \\
+		 \hline
+	\end{tabular}
+	\caption{Confusion Matrix: Classification result of SemeionNet}
+\end{table}
+
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ | l | c | c | c |}
+		 \hline
+		  & \multicolumn{3}{c|}{\textbf{Accuracy (Predicted class) (\%)}} \\
+		 \hline
+		 \multirow{2}{*}{\textbf{Accuracy (Actual class) (\%)}} & & \textit{Good} & \textit{Bad}\\
+		 \cline{2-4}
+		 & \textit{Good} & 88.89 & 11.11 \\
+		 \cline{2-4}
+		 & \textit{Bad} & 2.22 & 97.78 \\
+		 \hline
+	\end{tabular}
+	\caption{Confusion Matrix: Classification result of IonosphereNet}
+\end{table}
+
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ | l | c | c | c | c | c | }
+		 \hline
+		  & \multicolumn{5}{c|}{\textbf{Accuracy (Predicted class) (\%)}} \\
+		 \hline
+		 \multirow{5}{*}{
+			 \rotatebox[origin=c]{90}{
+			 	\shortstack[c] {
+			 		\textbf{Accuracy} \\
+					\textbf{\small (Actual class) (\%)}
+				}
+			 }
+		 } & & \textit{Move-Forward} & \textit{Slight-Right-Turn} & \textit{Sharp-Right-Turn} & \textit{Slight-Left-Turn} \\
+		 \cline{2-6}
+		 & \textit{Move-Forward} & 83.36 & 5.99 & 9.34 & 1.32 \\
+		 \cline{2-6}
+		 & \textit{Slight-Right-Turn} & 15.13 & 82.32 & 2.54 & 0 \\
+		 \cline{2-6}
+		 & \textit{Sharp-Right-Turn} & 2.77 & 0.81 & 96.19 & 0.24 \\
+		 \cline{2-6}
+		 & \textit{Slight-Left-Turn} & 5.18 & 0 & 5.49 & 89.33 \\
+		 \hline
+	\end{tabular}
+	\caption{Confusion Matrix: Classification result of RobotNet}
+\end{table}
+
+\section{Conclusions} \label{conclusionref}
+In this project we investigated the use of Convolutional Neural Networks to classify patterns in the context of computational intelligence.
+\\ \\
+It was not immediately obvious for us, that learning in this kind of network means learning parameters which have a slightly different semantic as the standard ANN. That is, one learns not only \emph{weights} but elements of filter matrices. These filter matrices are the convolutions. \emph{Hyperparameters} like filter dimensions ($w, h, c$ as described in subsection \ref{sub:cnn}) had to be defined before the training could start.
+\\ \\
+While, in general, we use existing network architectures, particularly, AlexNet, we did not use pre-trained weights.
+\\ \\
+The experiments show that CNNs are a useful tool in terms of data classification. We show that it is possible to classify the Semeion dataset with an accuracy of 94.59\%, Ionosphere with 93.3\% and Wall Following Robot with 87.79\%.
+\\ \\
+The remarkable high performance on the Semeion dataset shows once again that CNNs work particularly well on 2D image data. However, the performance on Ionosphere and Wall Following Robot indicates that the CNN classifier can also be applied to 1D data successfully.
+\\ \\
+Furthermore, we can clearly see that training on a GPU is much faster than training on the CPU. In case of the Wall Following Robot dataset training on the GPU was 93\% faster than on the CPU.
 
 \newpage
-\section*{Annex I. Project plan} \hypertarget{researchtimeline}
-\centering
-{\rowcolors{2}{green!50!yellow!30}{white}
-\begin{longtable}[c]{ c  p{9cm}  c  c}
-	\textbf{Date} & \textbf{Work step} & \textbf{Assigned to} & \textbf{Status}\\
-	\hline
-	\endfirsthead
-	
-
-	\textbf{Date} & \textbf{Work step} & \textbf{Assigned to} & \textbf{Status}\\
-	\hline\hline
-	\endhead
-	
-	\endfoot
-	\hline
-	\endlastfoot
-	
-	03.10.2017 & Defition of Project scope, topic, goals and members. & HB, DS, YG & Completed\\
-	
-	16.02.2018 & Submission of Project report to Prof. Mayer. & DS & TBD\\
-	
-\end{longtable}	
-\centering
 
 \bibliographystyle{apalike}
 
